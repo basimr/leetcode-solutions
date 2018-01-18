@@ -1,7 +1,7 @@
 class Solution:
     @staticmethod
     def isPalindrome(x):
-        """Leetcode runtime: 723ms
+        """Leetcode runtime: 588ms
         :type x: int
         :rtype: bool
         """
