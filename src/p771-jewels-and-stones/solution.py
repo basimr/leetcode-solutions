@@ -5,4 +5,13 @@ class Solution:
         :type stones: str
         :rtype: int
         """
-        return 0
+        counts = {}
+        for s in stones:
+            count = counts.get(s, 0)
+            counts[s] = count + 1
+
+        num_jewels = 0
+        for j in jewels:
+            num_jewels += counts.get(j, 0)
+
+        return num_jewels
