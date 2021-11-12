@@ -1,4 +1,5 @@
 import math
+import struct
 from typing import List
 
 
@@ -37,6 +38,26 @@ def continue_guessing(history: List[int]) -> bool:
     return False
 
 
+def fast_inverse_square_root(x: int) -> float:
+    """Code copied from:
+        https://github.com/ajcr/ajcr.github.io/blob/master/_posts/2016-04-01-fast-inverse-square-root-python.md
+    """
+    threehalfs = 1.5
+    x2 = x * 0.5
+    y = x
+
+    packed_y = struct.pack('f', y)
+    i = struct.unpack('i', packed_y)[0]  # treat float's bytes as int
+    i = 0x5f3759df - (i >> 1)            # arithmetic with magic number
+    packed_i = struct.pack('i', i)
+    y = struct.unpack('f', packed_i)[0]  # treat int's bytes as float
+
+    y = y * (threehalfs - (x2 * y * y))  # Newton's method
+    y = y * (threehalfs - (x2 * y * y))  # Second iteration adds accuracy
+    y = y * (threehalfs - (x2 * y * y))  # Third iteration adds even more accuracy to pass leetcode test cases
+    return y
+
+
 class Solution:
     @staticmethod
     def babylonian_method(x: int) -> int:
@@ -55,4 +76,14 @@ class Solution:
 
         return history[-1]
 
-    mySqrt = babylonian_method
+    @staticmethod
+    def doom_square_root(x: int) -> int:
+        """Calculate square root using the Fast Inverse Square Root method used in Doom.
+            Reference: https://en.wikipedia.org/wiki/Fast_inverse_square_root"""
+        inverse_sqrt = fast_inverse_square_root(x)
+        sqrt = 1 / inverse_sqrt
+        truncated = math.floor(sqrt)
+        return truncated
+
+    # mySqrt = babylonian_method
+    mySqrt = doom_square_root
